@@ -16,7 +16,7 @@ namespace DigitizeAgri.SAL
 {
     public class Services
     {
-
+        //Nahid - Common method to get and post 
         public async Task<string> GetPostDetails(string url,string method,string dataToUpload)
         {
             string returnString = string.Empty;
