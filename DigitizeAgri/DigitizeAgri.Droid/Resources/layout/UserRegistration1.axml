@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@drawable/logBackground"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#B3000000"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:scrollbarThumbVertical="@null">
+        <LinearLayout
+            android:id="@+id/widget111"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <RelativeLayout
+                android:id="@+id/details"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:padding="10dp">
+                <ImageView
+                    android:id="@+id/imglogo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/Logo" />
+                <EditText
+                    android:id="@+id/userLoginID"
+                    android:layout_below="@+id/imglogo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="50dp"
+                    android:textSize="16dp"
+                    android:hint="LOGIN"
+                    android:background="@drawable/entryTextStyle"
+                    android:textColor="@android:color/white"
+                    android:drawableStart="@drawable/iPhone1"
+                    android:layout_centerHorizontal="true" />
+                <EditText
+                    android:id="@+id/phone"
+                    android:layout_below="@+id/userLoginID"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:phoneNumber="true"
+                    android:hint="PHONE"
+                    android:textSize="16dp"
+                    android:background="@drawable/entryTextStyle"
+                    android:textColor="@android:color/white"
+                    android:drawableStart="@drawable/iPhone1"
+                    android:layout_centerHorizontal="true" />
+                <EditText
+                    android:id="@+id/password"
+                    android:layout_below="@+id/phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="PASSWORD"
+                    android:background="@drawable/entryTextStyle"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@android:color/white"
+                    android:textColorHighlight="@android:color/white"
+                    android:password="true"
+                    android:textSize="16dp"
+                    android:drawableStart="@drawable/iLock1"
+                    android:layout_centerHorizontal="true" />
+                <EditText
+                    android:id="@+id/confirmpwd"
+                    android:layout_below="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="CONFIRM PASSWORD"
+                    android:textSize="16dp"
+                    android:layout_marginTop="10dp"
+                    android:textColor="@android:color/white"
+                    android:textColorHighlight="@android:color/white"
+                    android:password="true"
+                    android:background="@drawable/entryTextStyle"
+                    android:drawableStart="@drawable/iLock1"
+                    android:layout_centerHorizontal="true" />
+                <Button
+                    android:id="@+id/prdToReg"
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/confirmpwd"
+                    android:background="@drawable/pnbutton"
+                    android:textSize="16dp"
+                    android:text="Proceed To Next Step"
+                    android:layout_marginTop="50dp" />
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@drawable/logBackground"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#B3000000"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:scrollbarThumbVertical="@null">
+        <LinearLayout
+            android:id="@+id/widget111"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <RelativeLayout
+                android:id="@+id/details"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:padding="10dp">
+                <ImageView
+                    android:id="@+id/imglogo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="fitXY"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/Logo" />
+                <EditText
+                    android:id="@+id/phone"
+                    android:layout_below="@+id/imglogo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:phoneNumber="true"
+                    android:hint="PHONE"
+                    android:textColor="@android:color/white"
+                    android:drawableStart="@drawable/iPhone1"
+                    android:layout_centerHorizontal="true" />
+                <EditText
+                    android:id="@+id/password"
+                    android:layout_below="@+id/phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="PASSWORD"
+                    android:textColor="@android:color/white"
+                    android:textColorHighlight="@android:color/white"
+                    android:password="true"
+                    android:drawableStart="@drawable/iLock1"
+                    android:layout_centerHorizontal="true" />
+                <Button
+                    android:id="@+id/signIn"
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/password"
+                    android:background="@drawable/sibutton"
+                    android:textSize="16dp"
+                    android:text="Sign In"
+                    android:layout_marginTop="10dp" />
+                <Button
+                    android:id="@+id/createAccount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/signIn"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/cabutton"
+                    android:textSize="16dp"
+                    android:text="Create Account"
+                    android:layout_marginTop="10dp" />
+                <TextView
+                    android:id="@+id/forgotPwd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/createAccount"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="15dp"
+                    android:text="Forgot Password?"
+                    android:textColorLink="#FFFFFF" />
+                <Button
+                    android:id="@+id/fbLogin"
+                    android:layout_width="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_height="50dp"
+                    android:layout_below="@id/forgotPwd"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/FbBtn" />
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:id="@+id/Hyderabad"
+        android:title="Hyderabad"
+        showAsAction="ifroom"/>
+  <item android:id="@+id/Warangal"
+        android:title="Warangal"
+        showAsAction="ifroom"/>
+  <item android:id="@+id/Vijayawada"
+        android:title="Vijayawada"
+        showAsAction="ifroom"/>
+</menu>

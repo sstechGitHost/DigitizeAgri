@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/larrow"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true" />
+    <TextView
+        android:id="@+id/lblName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Marketing"
+        android:textSize="14dp"
+        android:textStyle="bold"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="20dp"
+        android:textColor="@color/white_color"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/arrow" />
+    <TextView
+        android:id="@+id/lblInfo"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:text=""
+        android:textSize="14dp"
+        android:background="@drawable/icircle"
+        android:textColor="@color/black_color"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true" />
+    <TextView
+        android:id="@+id/lblNew"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:text=""
+        android:textStyle="bold"
+        android:textSize="14dp"
+        android:background="@drawable/ncircle"
+        android:textColor="@color/black_color"
+        android:gravity="center"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/lblInfo" />
+    <TextView
+        android:id="@+id/lblTotal"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:text=""
+        android:textSize="14dp"
+        android:background="@drawable/tcircle"
+        android:textColor="@color/black_color"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/lblNew" />
+    <TextView
+        android:id="@+id/NSA"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:text=""
+        android:layout_marginTop="5dp"
+        android:textSize="12dp"
+        android:textColor="@color/green_color"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/lblInfo" />
+</RelativeLayout>

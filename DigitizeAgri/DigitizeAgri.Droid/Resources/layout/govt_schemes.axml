@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color">
+    <ImageView
+        android:id="@+id/widget28"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/Logo"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+    <TextView
+        android:id="@+id/widget29"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Government Schemes"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/orange_color"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:layout_below="@+id/widget28"
+        android:layout_centerHorizontal="true" />
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="10dp"
+        android:background="#FFFFFF"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/widget29" />
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="150dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/line" />
+    <TextView
+        android:id="@+id/widget30"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Program Categories"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/green_color"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:layout_below="@+id/spinner"
+        android:layout_centerHorizontal="true" />
+    <RelativeLayout
+        android:id="@+id/rl"
+        android:layout_marginRight="40dp"
+        android:layout_below="@+id/widget30"
+        android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/Info"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:text="Info"
+            android:textColor="@color/white_color"
+            android:textSize="12dp"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true" />
+        <TextView
+            android:id="@+id/line1"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:text="|"
+            android:textSize="12dp"
+            android:gravity="center"
+            android:textColor="@color/white_color"
+            android:layout_marginRight="8dp"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/Info" />
+        <TextView
+            android:id="@+id/New"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:text="New"
+            android:textSize="12dp"
+            android:gravity="center"
+            android:textColor="@color/white_color"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/line1" />
+        <TextView
+            android:id="@+id/line2"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:text="|"
+            android:textSize="12dp"
+            android:gravity="center"
+            android:textColor="@color/white_color"
+            android:layout_marginRight="8dp"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/New" />
+        <TextView
+            android:id="@+id/Total"
+            android:layout_width="30dp"
+            android:layout_height="25dp"
+            android:text="Total"
+            android:textSize="12dp"
+            android:gravity="center"
+            android:textColor="@color/white_color"
+            android:layout_marginRight="8dp"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@+id/line2" />
+    </RelativeLayout>
+    <ListView
+        android:id="@+id/List"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@+id/rl" />
+</RelativeLayout>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color">
+    <ImageView
+        android:id="@+id/widget28"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/Logo"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+    <TextView
+        android:id="@+id/widget29"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Government Schemes"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/orange_color"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:layout_below="@+id/widget28"
+        android:layout_centerHorizontal="true" />
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="10dp"
+        android:background="#FFFFFF"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/widget29" />
+    <Button
+        android:id="@+id/back"
+        android:layout_width="141dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/back"
+        android:layout_height="22dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/line" />
+    <TextView
+        android:id="@+id/subcategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:layout_marginTop="20dp"
+        android:textColor="@color/green_color"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:layout_below="@+id/back"
+        android:layout_centerHorizontal="true" />
+    <ListView
+        android:id="@+id/sublist"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@+id/subcategory" />
+</RelativeLayout>
