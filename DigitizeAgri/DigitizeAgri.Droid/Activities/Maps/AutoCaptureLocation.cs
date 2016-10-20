@@ -1,7 +1,6 @@
 using System;
 using Android.App;
 using Android.OS;
-using Android.Gms.Location;
 using Android.Gms.Common;
 using Android.Gms.Common.Apis;
 using Android.Util;
@@ -12,31 +11,144 @@ using System.Collections.Generic;
 using Android.Gms.Maps.Model;
 using Android.Graphics;
 using System.Linq;
+using Android.Net;
+using Android.Runtime;
+using Android.Content;
+
 
 namespace DigitizeAgri.Droid.Activities.Maps
 {
-    [Activity(Label = "FusedLocationProvider")]
-    public class AutoCaptureLocation : Activity, GoogleApiClient.IConnectionCallbacks,
-        GoogleApiClient.IOnConnectionFailedListener, Android.Gms.Location.ILocationListener
+    [Activity(Label = "AutoCaptureLocation")]
+    public class AutoCaptureLocation : Activity, ILocationListener
     {
-        GoogleApiClient apiClient;
-        LocationRequest locRequest;
-
-
-        bool _isGooglePlayServicesInstalled;
-
-        ////Lifecycle methods
+        LocationManager locMgr;
+        public static Android.Locations.Location _currentLocation;
+        List<LocationData> locations = new List<LocationData>();
+        int pos = 0;
+        bool Isstart = false;
+        bool iszoom = false;
+        TextView tvvalues = null;
+        ConnectivityManager connectivityManager;
         private MapFragment _mapFragment;
         GoogleMap map;
-        TextView tvvalues = null;
-        Button btntake = null;
-        Button btndone;
-        protected async override void OnCreate(Bundle bundle)
+        bool isLmode = false;
+        public void OnLocationChanged(Location location)
         {
-            base.OnCreate(bundle);
-            Log.Debug("OnCreate", "OnCreate called, initializing views...");
+            if (isLmode)
+            {
+                bool isvalid = true;
+                _currentLocation = location;
 
-            // Set our view from the "main" layout resource
+                if (location != null)
+                {
+                    //   setupDrawLine(location);
+                    float ac = location.Accuracy;
+                    if (ac > 20)
+                    {
+                        isvalid = false;
+                        ShowMassage("Location", "You are in indoor place.Please go to OutDoor Place");
+                        // Toast.MakeText(this, "Accuracy" + ac.ToString(), ToastLength.Long).Show();
+                    }
+                    NetworkInfo activeConnection = connectivityManager.ActiveNetworkInfo;
+                    if (activeConnection != null && activeConnection.IsConnected)
+                    {
+
+                        if (activeConnection.TypeName == "WIFI")
+                        {
+                            isvalid = false;
+                            tvvalues.Text = "Error:  You are Connected with WIFI. Please Use Mobile Data ";
+                            ShowMassage("Network Status", "You are Connected with WIFI. Please Use Mobile Data");
+                        }
+                        else
+                        {
+                            isvalid = true;
+                            tvvalues.Text = "Start";
+                        }
+                    }
+                    else
+                    {
+                        isvalid = false;
+                        tvvalues.Text = "Error:  Internet Not available ";
+                        ShowMassage("Network Status", "Internet Not available ");
+
+                    }
+                    if (isvalid)
+                    {
+                        Location l = null;
+                        l = location;
+                        LocationData ld = new LocationData();
+                        ld.location = l;
+                        pos = pos + 1;
+                        ld.pos = pos;
+
+                        locations.Add(ld);
+                        if (!Isstart)
+                        {
+                            tvvalues.Text = "Please Go";
+                            SetupLine();
+                            // tvvalues.Text = "please stop until move Status.";
+                        }
+
+                        ld = null;
+                        //  tvvalues.Text = "Lat:" + _currentLocation.Latitude + "--Long:" + _currentLocation.Longitude;
+
+                        if (!iszoom)
+                        {
+                            iszoom = true;
+                            CameraUpdate cameraUpdate = CameraUpdateFactory.NewLatLngZoom(new LatLng(location.Latitude, location.Longitude), 24);
+                            map.MoveCamera(cameraUpdate);
+                            map.AnimateCamera(CameraUpdateFactory.ZoomTo(22));
+                        }
+                    }
+                    // _map.SetOnMapClickListener(new OnMapClickListener(this, _map));
+
+                }
+            }
+        }
+
+        public void OnProviderDisabled(string provider)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnProviderEnabled(string provider)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnStatusChanged(string provider, [GeneratedEnum] Availability status, Bundle extras)
+        {
+            throw new NotImplementedException();
+        }
+        public void ShowMassage(string title, string msg)
+        {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.SetTitle(title);
+            alert.SetMessage(msg);
+            alert.SetCancelable(false);
+            alert.SetNegativeButton("OK", delegate { base.OnBackPressed(); });
+            alert.Show();
+
+        }
+        public void settingMassage()
+        {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.SetTitle("Location Settings");
+            alert.SetMessage("Please Go to inside 'Mode' Opation and Select 'Device Only' Opation");
+            alert.SetCancelable(false);
+            alert.SetNegativeButton("OK", delegate {
+                StartActivity(new Intent(Android.Provider.Settings.ActionLocationSourceSettings));
+            });
+            alert.Show();
+
+        }
+        protected async override void OnCreate(Bundle savedInstanceState)
+        {
+            base.OnCreate(savedInstanceState);
+            connectivityManager = (ConnectivityManager)GetSystemService(ConnectivityService);
+
+
+
             SetContentView(Resource.Layout.AutoCaptureLocation);
 
             _mapFragment = FragmentManager.FindFragmentById<MapFragment>(Resource.Id.map);
@@ -47,46 +159,81 @@ namespace DigitizeAgri.Droid.Activities.Maps
             _mapFragment.Map.MapType = GoogleMap.MapTypeSatellite;
             map = _mapFragment.Map;
 
-            _isGooglePlayServicesInstalled = IsGooglePlayServicesInstalled();
+            locMgr = GetSystemService(Context.LocationService) as LocationManager;
+            tvvalues = FindViewById<TextView>(Resource.Id.tvvalues);
+            var btnStart = FindViewById<Button>(Resource.Id.btnStart);
+            var btnDone = FindViewById<Button>(Resource.Id.btnDone);
 
-            if (_isGooglePlayServicesInstalled)
+            NetworkInfo activeConnection = connectivityManager.ActiveNetworkInfo;
+            if (activeConnection != null && activeConnection.IsConnected)
             {
-                // pass in the Context, ConnectionListener and ConnectionFailedListener
-                apiClient = new GoogleApiClient.Builder(this, this, this)
-                    .AddApi(LocationServices.API).Build();
 
-                // generate a location request that we will pass into a call for location updates
-                locRequest = new LocationRequest();
+                if (activeConnection.TypeName == "WIFI")
+                {
+                    tvvalues.Text = "Error:  You are Connected with WIFI. Please Use Mobile Data ";
+                    ShowMassage("Network Status", "You are Connected with WIFI. Please Use Mobile Data");
+                }
+                else
+                {
+                    tvvalues.Text = "Start";
+                    //Settings.Secure
 
+
+                }
             }
             else
             {
-                Log.Error("OnCreate", "Google Play Services is not installed");
-                Toast.MakeText(this, "Google Play Services is not installed", ToastLength.Long).Show();
-                Finish();
-            }
-            tvvalues = FindViewById<TextView>(Resource.Id.tvvalues);
-            btndone = FindViewById<Button>(Resource.Id.btndone);
-            btntake = FindViewById<Button>(Resource.Id.btntake);
-            var btnClear = FindViewById<Button>(Resource.Id.btnClear);
-            Location location = LocationServices.FusedLocationApi.GetLastLocation(apiClient);
-            btnClear.Click += (sender, e) =>
-            {
-                map.Clear();
+                tvvalues.Text = "Error:  Internet Not available ";
+                ShowMassage("Network Status", "Internet Not available ");
 
+            }
+
+            btnStart.Click += (sender, e) =>
+            {
+                tvvalues.Text = "Please wait Finding Your Location...";
+                map.Clear();
                 locations.Clear();
             };
 
-            btntake.Click += (sender, e) =>
+            btnDone.Click += (sender, e) =>
             {
                 Isstart = true;
                 map.Clear();
-                SetupPolygon();
+                List<LocationData> templocations = new List<LocationData>();
+                templocations = locations;
+                SetupPolygon(templocations);
+                tvvalues.Text = "Stop";
 
             };
-
-
-
+            // Create your application here
+        }
+        public void SetupPolygon(List<LocationData> templocations)
+        {
+            if (templocations.Count != 0)
+            {
+                var latLngPoints = new LatLng[templocations.Count];
+                int index = 0;
+                var data = templocations;
+                foreach (LocationData loc in data)
+                {
+                    latLngPoints[index++] = new LatLng(loc.location.Latitude, loc.location.Longitude);
+                }
+                //var polylineMarker = new PolylineOptions().Visible(true).InvokeColor(Color.Red).InvokeWidth(10);
+                PolygonOptions rectOptions = new PolygonOptions();
+                rectOptions.InvokeFillColor(Android.Graphics.Color.ParseColor("#9689B81E"))
+                   .InvokeStrokeColor(Android.Graphics.Color.ParseColor("#9689B81E"))
+                   .InvokeStrokeWidth(5);
+                foreach (var item in latLngPoints)
+                {
+                    rectOptions.Add(item);
+                }
+                //  MarkOnMap("s", latLngPoints[0], Resource.Drawable.MarkerSource);
+                //  MarkOnMap("d", latLngPoints[locations.Count-1], Resource.Drawable.MarkerDest);
+                Polygon polygon = map.AddPolygon(rectOptions);
+                polygon.Clickable = true;
+                map.SetOnPolygonClickListener(new OnPolygonClickListener1(this, _mapFragment));
+                // Toast.MakeText(this, "Added", ToastLength.Long).Show();
+            }
 
         }
         public void SetupLine()
@@ -113,229 +260,59 @@ namespace DigitizeAgri.Droid.Activities.Maps
             }
 
         }
-
-        private void Map_PolylineClick(object sender, GoogleMap.PolylineClickEventArgs e)
-        {
-            Toast.MakeText(this, String.Format("You clicked on Marker ID {0}", 102), ToastLength.Short).Show();
-        }
-        bool IsGooglePlayServicesInstalled()
-        {
-            int queryResult = GoogleApiAvailability.Instance.IsGooglePlayServicesAvailable(this);
-            if (queryResult == ConnectionResult.Success)
-            {
-                Log.Info("AutoCaptureLocation", "Google Play Services is installed on this device.");
-                return true;
-            }
-
-            if (GoogleApiAvailability.Instance.IsUserResolvableError(queryResult))
-            {
-                string errorString = GoogleApiAvailability.Instance.GetErrorString(queryResult);
-                Log.Error("AutoCaptureLocation", "There is a problem with Google Play Services on this device: {0} - {1}", queryResult, errorString);
-
-                // Show error dialog to let user debug google play services
-            }
-            return false;
-        }
-        bool apiclientloaded = false;
-        protected async override void OnResume()
+        protected override void OnResume()
         {
             base.OnResume();
-            Log.Debug("OnResume", "OnResume called, connecting to client...");
-
-            apiClient.Connect();
-            if (!apiclientloaded)
+            string Provider = LocationManager.GpsProvider;
+            if (Provider != null)
             {
-
-
-            }
-
-
-            btndone.Click += async delegate
-            {
-                //  SetupPolygon();
-                Isstart = false;
-                locations.Clear();
-                if (apiClient.IsConnected)
+                if (locMgr.IsProviderEnabled(Provider))
                 {
-                    apiclientloaded = true;
+                    locMgr.RequestLocationUpdates(Provider, 2000, 1, this);
+                    Location cul = locMgr.GetLastKnownLocation(Provider);
+                    if (cul != null)
+                    {
+                        float ac = cul.Accuracy;
+                        if (ac > 20)
+                        {
+                            ShowMassage("Location", "You are in indoor place.Please go to OutDoor Place");
+                            // Toast.MakeText(this, "Accuracy" + ac.ToString(), ToastLength.Long).Show();
+                        }
+                    }
 
+                    //    bool gpsEnabled = Android.Provider.Settings.Secure.IsLocationProviderEnabled(ContentResolver, Provider);
 
-                    // Setting location priority to PRIORITY_HIGH_ACCURACY (100)
-                    locRequest.SetPriority(100);
+                    //    Android.Provider.Settings.Secure.PutInt(ContentResolver, Android.Provider.Settings.Secure.LocationMode, 3);
 
-                    // Setting interval between updates, in milliseconds
-                    // NOTE: the default FastestInterval is 1 minute. If you want to receive location updates more than 
-                    // once a minute, you _must_ also change the FastestInterval to be less than or equal to your Interval
-                    locRequest.SetFastestInterval(500);
-                    locRequest.SetInterval(1000);
-
-                    Log.Debug("LocationRequest", "Request priority set to status code {0}, interval set to {1} ms",
-                        locRequest.Priority.ToString(), locRequest.Interval.ToString());
-
-                    // pass in a location request and LocationListener
-                    await LocationServices.FusedLocationApi.RequestLocationUpdates(apiClient, locRequest, this);
-                    // In OnLocationChanged (below), we will make calls to update the UI
-                    // with the new location data
+                    int intid = Android.Provider.Settings.Secure.GetInt(ContentResolver, Android.Provider.Settings.Secure.LocationMode);
+                    if (intid != 1)
+                    {
+                        settingMassage();
+                        // StartActivity(new Intent(Android.Provider.Settings.ActionLocationSourceSettings));
+                    }
+                    else
+                        isLmode = true;
                 }
                 else
                 {
-                    Log.Info("LocationClient", "Please wait for Client to connect");
+                    ShowMassage("GPS Status", Provider + " is not available. Does the device have location services enabled?");
+                    // StartActivity(new Intent(Android.Provider.Settings.ActionLocationSourceSettings));
+                    // Log.Info(tag, Provider + " is not available. Does the device have location services enabled?");
                 }
-
-            };
-        }
-
-        protected override async void OnPause()
-        {
-            base.OnPause();
-            Log.Debug("OnPause", "OnPause called, stopping location updates");
-
-            if (apiClient.IsConnected)
-            {
-                // stop location updates, passing in the LocationListener
-                await LocationServices.FusedLocationApi.RemoveLocationUpdates(apiClient, this);
-
-                apiClient.Disconnect();
             }
-        }
-
-
-        ////Interface methods
-
-        public void OnConnected(Bundle bundle)
-        {
-            // This method is called when we connect to the LocationClient. We can start location updated directly form
-            // here if desired, or we can do it in a lifecycle method, as shown above 
-
-            // You must implement this to implement the IGooglePlayServicesClientConnectionCallbacks Interface
-            Log.Info("LocationClient", "Now connected to client");
-
-        }
-
-        public void OnDisconnected()
-        {
-            // This method is called when we disconnect from the LocationClient.
-
-            // You must implement this to implement the IGooglePlayServicesClientConnectionCallbacks Interface
-            Log.Info("LocationClient", "Now disconnected from client");
-        }
-
-        public void OnConnectionFailed(ConnectionResult bundle)
-        {
-            // This method is used to handle connection issues with the Google Play Services Client (LocationClient). 
-            // You can check if the connection has a resolution (bundle.HasResolution) and attempt to resolve it
-
-            // You must implement this to implement the IGooglePlayServicesClientOnConnectionFailedListener Interface
-            Log.Info("LocationClient", "Connection failed, attempting to reach google play services");
-        }
-        public static Android.Locations.Location _currentLocation;
-        string _locationProvider;
-        int pos = 0;
-        bool Isstart = false;
-        List<LocationData> locations = new List<LocationData>();
-        bool iszoom = false;
-        public void OnLocationChanged(Location location)
-        {
-            // This method returns changes in the user's location if they've been requested
-
-            // You must implement this to implement the Android.Gms.Locations.ILocationListener Interface
-            Log.Debug("LocationClient", "Location updated");
-            _currentLocation = location;
-            if (location != null)
+            else
             {
-                //   setupDrawLine(location);
-                Location l = null;
-                l = location;
-                LocationData ld = new LocationData();
-                ld.location = l;
-                pos = pos + 1;
-                ld.pos = pos;
-
-                locations.Add(ld);
-                if (!Isstart)
-                {
-                    SetupLine();
-                }
-
-                ld = null;
-                tvvalues.Text = "Lat:" + _currentLocation.Latitude + "--Long:" + _currentLocation.Longitude;
-                if (!iszoom)
-                {
-                    iszoom = true;
-                    CameraUpdate cameraUpdate = CameraUpdateFactory.NewLatLngZoom(new LatLng(location.Latitude, location.Longitude), 24);
-                    map.MoveCamera(cameraUpdate);
-                    map.AnimateCamera(CameraUpdateFactory.ZoomTo(24));
-                }
-
-
-                // _map.SetOnMapClickListener(new OnMapClickListener(this, _map));
-
+                Toast.MakeText(this, "internet not available", ToastLength.Long).Show();
             }
-            //latitude2.Text = "Latitude: " + location.Latitude.ToString();
-            //longitude2.Text = "Longitude: " + location.Longitude.ToString();
-            //provider2.Text = "Provider: " + location.Provider.ToString();
-        }
-        public void setupDrawLine(Location location)
-        {
-            _currentLocation = location;
-
-            Location l = null;
-            l = location;
-            // if (!locations.Contains(l))
-            // {
-            LocationData ld = new LocationData();
-            ld.location = l;
-            pos = pos + 1;
-            ld.pos = pos;
-
-            locations.Add(ld);
-            ld = null;
-            tvvalues.Text = "Lat:" + _currentLocation.Latitude + "--Long:" + _currentLocation.Longitude;
-            Toast.MakeText(this, "New Value Added", ToastLength.Long).Show();
-            l = null;
-
-            SetupPolygon();
-        }
-        public void SetupPolygon()
-        {
-            if (locations.Count != 0)
-            {
-                var latLngPoints = new LatLng[locations.Count];
-                int index = 0;
-                var data = locations;
-                foreach (LocationData loc in data)
-                {
-                    latLngPoints[index++] = new LatLng(loc.location.Latitude, loc.location.Longitude);
-                }
-                //var polylineMarker = new PolylineOptions().Visible(true).InvokeColor(Color.Red).InvokeWidth(10);
-                PolygonOptions rectOptions = new PolygonOptions();
-                rectOptions.InvokeFillColor(Android.Graphics.Color.ParseColor("#9689B81E"))
-                   .InvokeStrokeColor(Android.Graphics.Color.ParseColor("#9689B81E"))
-                   .InvokeStrokeWidth(5);
-                foreach (var item in latLngPoints)
-                {
-                    rectOptions.Add(item);
-                }
-                //  MarkOnMap("s", latLngPoints[0], Resource.Drawable.MarkerSource);
-                //  MarkOnMap("d", latLngPoints[locations.Count-1], Resource.Drawable.MarkerDest);
-                Polygon polygon = map.AddPolygon(rectOptions);
-                polygon.Clickable = true;
-                map.SetOnPolygonClickListener(new OnPolygonClickListener(this, _mapFragment));
-                // Toast.MakeText(this, "Added", ToastLength.Long).Show();
-            }
-
-        }
-        public void OnConnectionSuspended(int i)
-        {
 
         }
     }
-    public class OnPolygonClickListener : Java.Lang.Object, Android.Gms.Maps.GoogleMap.IOnPolygonClickListener
+    public class OnPolygonClickListener1 : Java.Lang.Object, Android.Gms.Maps.GoogleMap.IOnPolygonClickListener
     {
         private AutoCaptureLocation mapWithMarkersActivity;
         private MapFragment _mapFragment;
 
-        public OnPolygonClickListener(AutoCaptureLocation mapWithMarkersActivity, MapFragment _mapFragment)
+        public OnPolygonClickListener1(AutoCaptureLocation mapWithMarkersActivity, MapFragment _mapFragment)
         {
             // TODO: Complete member initialization
             this.mapWithMarkersActivity = mapWithMarkersActivity;

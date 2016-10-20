@@ -21,7 +21,7 @@ using DigitizeAgri.Droid.Activities;
 
 namespace DigitizeAgri.Droid
 {
-	[Activity (Label = "Digitize Agri",  Icon = "@drawable/icon",MainLauncher=false)]
+	[Activity (Label = "Digitize Agri",  Icon = "@drawable/icon",MainLauncher=true)]
 	public class MainActivity : Activity
 	{
         TextView txtForgot;

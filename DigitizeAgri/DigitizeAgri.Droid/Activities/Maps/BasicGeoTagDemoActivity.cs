@@ -15,7 +15,7 @@ using DigitizeAgri.Droid.Activities.Maps;
 namespace DigitizeAgri.Droid.Activities
 {
 
-    [Activity(Label = "@string/app_name", Icon = "@drawable/icon",MainLauncher=true)]
+    [Activity(Label = "@string/app_name", Icon = "@drawable/icon",MainLauncher=false)]
     public class BasicGeoTagDemoActivity : ListActivity
     {
         public static readonly int InstallGooglePlayServicesId = 1000;

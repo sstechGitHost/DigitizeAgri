@@ -15,7 +15,10 @@
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 	<!-- Allow the application to access Google web-based services. -->
 	<uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-	<!--
+  <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+  <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
+
+  <!--
 	NOTE: you MUST follow the instructions on this page
 	http://developer.xamarin.com/guides/android/platform_features/maps_and_location/maps/obtaining_a_google_maps_api_key/
 	to get an API key for your specific debug.keystore SHA1 and package name.
